@@ -1,11 +1,11 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { Jwt } from './interfaces/auth.interfaces';
+import { PrismaService } from '../prisma/prisma.service';
+import { AuthDto } from './dto/auth.dto';
+import { Msg, Jwt } from './interfaces/auth.interfaces';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   // ユーザー登録
-  async signUp(dto: AuthDto) {
+  async signUp(dto: AuthDto): Promise<Msg> {
     // パスワードのハッシュ化
     const hashed = await bcrypt.hash(dto.password, 12);
     // prisma でユーザー作成
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   // ログインメソッド
-  async login(dto: AuthDto) {
+  async login(dto: AuthDto): Promise<Jwt> {
     // prisma で同じメアドの一意なユーザーを検索
     const user = await this.prisma.user.findUnique({
       where: {

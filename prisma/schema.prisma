@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime @updatedAt
   email String @unique
   hashedPassword String
+  nickName String?
   // 複数の Task を追加できるので、逆参照を追加
   tasks Task[]
 }
@@ -30,5 +31,5 @@ model Task {
   // １対多 のリレーションで、ユーザーモデルから参照
   userId Int
   // Delete Cascade は, 参照モデルが削除された時に、参照してる側も自動で削除される
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: NoAction)
 }
