@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -10,11 +11,16 @@ import {
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import { Msg } from './interfaces/auth.interfaces';
+import { Csrf, Msg } from './interfaces/auth.interfaces';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('/csrf')
+  getCsrfToken(@Req() req: Request): Csrf {
+    return { csrfToken: req.csrfToken() };
+  }
 
   // サインアップ
   @Post('signup')
@@ -32,7 +38,7 @@ export class AuthController {
     const jwt = await this.authService.login(dto);
     res.cookie('access_token', jwt.accessToken, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'none',
       path: '/',
     });
@@ -47,7 +53,7 @@ export class AuthController {
   logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Msg {
     res.cookie('access_token', '', {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'none',
       path: '/',
     });
