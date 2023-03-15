@@ -11,7 +11,9 @@ async function bootstrap() {
   // フロントエンドと Cookie ベースで通信するための Cors 設定
   app.enableCors({
     credentials: true,
-    origin: ['http://localhost:3000'],
+    origin: [
+      'http://localhost:3000, https://nest-next-todo-demo.onrender.com/',
+    ],
   });
   // フロントエンドからの Cookie を解析
   app.use(cookieParser());
