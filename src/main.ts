@@ -12,7 +12,8 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     origin: [
-      'http://localhost:3000, https://nest-next-todo-demo.onrender.com/',
+      'http://localhost:3000',
+      'https://nest-next-todo-demo.onrender.com/',
     ],
   });
   // フロントエンドからの Cookie を解析
